@@ -1,0 +1,51 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'the_library_api_for_home_page.dart';
+
+// **************************************************************************
+// RetrofitGenerator
+// **************************************************************************
+
+// ignore_for_file: unnecessary_brace_in_string_interps
+
+class _TheLibraryApiForHomePage implements TheLibraryApiForHomePage {
+  _TheLibraryApiForHomePage(this._dio, {this.baseUrl}) {
+    baseUrl ??= 'https://api.nytimes.com/svc/books/v3/lists';
+  }
+
+  final Dio _dio;
+
+  String? baseUrl;
+
+  @override
+  Future<OverViewResponse> getOverViewBooks(publishDate, apiKey) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'published_date': publishDate,
+      r'api-key': apiKey
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<OverViewResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/overview.json',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = OverViewResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
+      if (T == String) {
+        requestOptions.responseType = ResponseType.plain;
+      } else {
+        requestOptions.responseType = ResponseType.json;
+      }
+    }
+    return requestOptions;
+  }
+}
