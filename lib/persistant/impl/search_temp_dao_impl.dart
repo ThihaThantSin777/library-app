@@ -25,9 +25,12 @@ class SearchTempDAOImpl extends SearchTempDAO{
 
     @override
     void save( String searchName) {
-
     SearchTempVO searchTempVO=SearchTempVO(DateTime.now().toString(),searchName);
-    _getSearchTempBox().put(DateTime.now().toString(), searchTempVO);
+    List<SearchTempVO>temp=_getSearchTempBox().values.toList().where((element) => element.name==searchName).toList();
+    if(temp.isEmpty){
+      _getSearchTempBox().put(DateTime.now().toString(), searchTempVO);
+    }
+
     }
 
     @override

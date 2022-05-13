@@ -76,6 +76,24 @@ class ViewMorePageBloc extends ChangeNotifier {
 _theLibraryModel.saveDetails(detailsVO);
   }
 
+  DetailsVO saveViewMoreVOObjectInDetailsTypeDetailsVO(ViewMoreVO viewMoreVO, String category) {
+    DetailsVO detailsVO = DetailsVO.normal();
+    detailsVO.image =viewMoreVO.imageURL;
+    detailsVO.title = viewMoreVO.bookDetails?[0].title.toString();
+    detailsVO.bookType = 'E book';
+    detailsVO.pages = 100;
+    detailsVO.rating = viewMoreVO.rank?.toDouble();
+    detailsVO.reviewCount = viewMoreVO.reviews?.length;
+    detailsVO.price = viewMoreVO.bookDetails?[0].price.toString() == '0.00'
+        ? '640.23'
+        : viewMoreVO.bookDetails?[0].price.toString();
+    detailsVO.description = viewMoreVO.bookDetails?[0].description.toString();
+    detailsVO.author = viewMoreVO.bookDetails?[0].author.toString();
+    detailsVO.timeStamp = DateTime.now().toString();
+    detailsVO.category = category;
+   return detailsVO;
+  }
+
   void scrollAndAddNewBooks(String categoryName) {
     if(_numResult>20 && getOffSet<_numResult){
       setOffSet = getOffSet + 20;

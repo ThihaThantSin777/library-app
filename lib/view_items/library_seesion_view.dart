@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:library_app/bloc/library_bloc.dart';
+import 'package:library_app/bloc/shelves_bloc.dart';
 import 'package:library_app/data/vos/details_vo/details_vo.dart';
 import 'package:library_app/resources/dimension.dart';
 import 'package:library_app/resources/strings.dart';
 import 'package:provider/provider.dart';
 
 class SortBottomSheetView extends StatelessWidget {
-  const SortBottomSheetView({Key? key,required this.sortText}) : super(key: key);
+  const SortBottomSheetView({Key? key,required this.sortText,required this.isShelf}) : super(key: key);
   final String sortText;
+  final bool isShelf;
   @override
   Widget build(BuildContext context) {
     LibraryBloc libraryBloc=Provider.of(context,listen:false);
+    ShelveBloc shelveBloc=Provider.of(context,listen:false);
     return SizedBox(
       height: MediaQuery.of(context).size.height*0.3,
       child: Column(
@@ -26,10 +29,16 @@ class SortBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(sortByRecentText),
               value: sortByRecentText,
               groupValue: sortText,
               onChanged: (value){
-                libraryBloc.sortText(value.toString());
+                if(isShelf){
+                  shelveBloc.sortText(value.toString());
+                  libraryBloc.setSortText=value.toString();
+                }else{
+                  libraryBloc.sortText(value.toString());
+                }
                 Navigator.of(context).pop();
               },
             ),
@@ -38,10 +47,16 @@ class SortBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(sortByTitleText),
               value: sortByTitleText,
               groupValue: sortText,
               onChanged: (value){
-                libraryBloc.sortText(value.toString());
+                if(isShelf){
+                  shelveBloc.sortText(value.toString());
+                  libraryBloc.setSortText=value.toString();
+                }else{
+                  libraryBloc.sortText(value.toString());
+                }
                 Navigator.of(context).pop();
               },
             ),
@@ -50,10 +65,16 @@ class SortBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(sortByAuthorText),
               value: sortByAuthorText,
               groupValue: sortText,
               onChanged: (value){
-                libraryBloc.sortText(value.toString());
+                if(isShelf){
+                  shelveBloc.sortText(value.toString());
+                  libraryBloc.setSortText=value.toString();
+                }else{
+                  libraryBloc.sortText(value.toString());
+                }
                 Navigator.of(context).pop();
               },
             ),
@@ -87,6 +108,7 @@ class PresentBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(presentListText),
               value: presentListText,
               groupValue: presentText,
               onChanged: (value){
@@ -99,6 +121,7 @@ class PresentBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(presentGridText),
               value: presentGridText,
               groupValue: presentText,
               onChanged: (value){
@@ -111,6 +134,7 @@ class PresentBottomSheetView extends StatelessWidget {
           ListTile(
             contentPadding: const EdgeInsets.all(0),
             leading: Radio(
+              key: const Key(presentLargeGridText),
               value: presentLargeGridText,
               groupValue: presentText,
               onChanged: (value){
@@ -127,12 +151,12 @@ class PresentBottomSheetView extends StatelessWidget {
 }
 
 class GridBookView extends StatelessWidget {
-    const GridBookView({Key? key,required this.detailsVO,required this.isLargeGrid,required this.height,required this.onTap}) : super(key: key);
+    const GridBookView({Key? key,required this.detailsVO,required this.isLargeGrid,required this.height,required this.onTap,required this.onPressed}) : super(key: key);
   final List<DetailsVO>detailsVO;
   final bool isLargeGrid;
   final double height;
   final Function(DetailsVO)onTap;
-
+  final Function(DetailsVO) onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +172,9 @@ class GridBookView extends StatelessWidget {
         itemBuilder: (_,index){
          return  GestureDetector(
            onTap: (){
-             onTap(detailsVO[index]);
+             DetailsVO details=detailsVO[index];
+             details.category='Action';
+             onTap(details);
            },
            child:
            Stack(
@@ -198,8 +224,9 @@ class GridBookView extends StatelessWidget {
                  child: Padding(
                    padding:  EdgeInsets.only(right: isLargeGrid?padding30x:padding20x),
                    child: IconButton(
+                     key: Key(detailsVO[index].title.toString()),
                      onPressed: (){
-
+                    onPressed(detailsVO[index]);
                      },
                      icon: const Icon(Icons.more_horiz,color: Colors.white),
                    ),
@@ -214,9 +241,10 @@ class GridBookView extends StatelessWidget {
 }
 
 class ListTileBooksView extends StatelessWidget {
-  const ListTileBooksView({Key? key,required this.detailsVO,required this.onTap}) : super(key: key);
+  const ListTileBooksView({Key? key,required this.detailsVO,required this.onTap,required this.onPressed}) : super(key: key);
   final List<DetailsVO>detailsVO;
   final Function(DetailsVO)onTap;
+  final Function(DetailsVO) onPressed;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -224,7 +252,11 @@ class ListTileBooksView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: detailsVO.length,
         itemBuilder:(_,index)=>ListTile(
-          onTap: ()=>onTap(detailsVO[index]),
+          onTap: () {
+            DetailsVO details=detailsVO[index];
+            details.category='Action';
+            onTap(details);
+          },
           minVerticalPadding: padding10x,
           contentPadding: const EdgeInsets.all(0),
           leading: ClipRRect(
@@ -236,12 +268,15 @@ class ListTileBooksView extends StatelessWidget {
           subtitle: Text(detailsVO[index].bookType.toString()),
           trailing: Wrap(
 
-            children: const [
-              Icon(Icons.download_done_outlined),
-              SizedBox(
+            children:  [
+            const  Icon(Icons.download_done_outlined),
+            const  SizedBox(
                 width: padding50x,
               ),
-              Icon(Icons.more_horiz)
+             IconButton(onPressed: (){
+
+               onPressed(detailsVO[index]);
+             }, icon: const Icon(Icons.more_horiz))
             ],
           ),
         )

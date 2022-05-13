@@ -11,8 +11,15 @@ class HomePageBloc extends ChangeNotifier{
   OverViewVO ?_overViewVO;
   List<DetailsVO>?_detailsBook;
   int _currentIndex=0;
+  bool _isFloatingActionButtonShow=false;
 
 
+  set setIsFloatingActionButtonShow(bool isFloatingActionButtonShow){
+    _isFloatingActionButtonShow=isFloatingActionButtonShow;
+    notifyListeners();
+  }
+
+  bool get getIsFloatingActionButtonShow=>_isFloatingActionButtonShow;
   set setCurrentIndex(int currentIndex) {
     _currentIndex = currentIndex;
     notifyListeners();
@@ -53,7 +60,25 @@ class HomePageBloc extends ChangeNotifier{
       },onError: (error)=>print(error)
       );
     }
+  DetailsVO saveBookVOObjectInDetailsTypeDetailsVO(BooksVO booksVO, String category) {
 
+    DetailsVO detailsVO = DetailsVO.normal();
+
+    detailsVO.image = booksVO.bookImage.toString();
+    detailsVO.title = booksVO.title.toString();
+    detailsVO.bookType = 'E book';
+    detailsVO.pages = 100;
+    detailsVO.rating = double.parse(booksVO.rank.toString());
+    detailsVO.reviewCount = booksVO.buyLinks?.length ?? 0;
+    detailsVO.price = booksVO.price.toString() == '0.00'
+        ? '640.23'
+        : booksVO.price.toString();
+    detailsVO.description = booksVO.description.toString();
+    detailsVO.author = booksVO.author.toString();
+    detailsVO.timeStamp = DateTime.now().toString();
+    detailsVO.category = category;
+    return detailsVO;
+  }
   void reSaveDetailsObject(DetailsVO detailsVO) {
     detailsVO.timeStamp = DateTime.now().toString();
     _theLibraryModel.saveDetails(detailsVO);
@@ -76,4 +101,5 @@ class HomePageBloc extends ChangeNotifier{
     detailsVO.category = category;
     _theLibraryModel.saveDetails(detailsVO);
   }
+
   }

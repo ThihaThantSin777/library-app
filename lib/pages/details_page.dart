@@ -15,8 +15,9 @@ class DetailsPage extends StatelessWidget {
   }
 
   void navigateToDetailsView(ItemsVO itemsVO, context) {
+    String categoryName=itemsVO.volumeInfo?.categories?.join(',')??'Action';
     SearchTempBloc searchTempBloc=Provider.of(context,listen: false);
-    searchTempBloc.saveItemVOObjectInDetailsDatabase(itemsVO);
+    searchTempBloc.saveItemVOObjectInDetailsDatabase(itemsVO,categoryName);
     Navigator.of(context).push(
         MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider<DetailsBloc>(
@@ -32,6 +33,7 @@ class DetailsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 1,
         leading: IconButton(
+          key: const Key('Back Details'),
           onPressed: () {
             navigateBack(context);
           },
@@ -59,6 +61,7 @@ class DetailsPage extends StatelessWidget {
           detailsVO == null
               ? const Center(child: CircularProgressIndicator(),)
               : ListView(
+            key: const Key('Details ListView'),
             children: [
               DetailsImageAndTitleView(
                 title: detailsVO.title.toString(),

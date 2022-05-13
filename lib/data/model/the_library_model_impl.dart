@@ -1,14 +1,15 @@
 import 'package:library_app/data/model/the_library_model.dart';
 import 'package:library_app/data/vos/details_vo/details_vo.dart';
-import 'package:library_app/data/vos/over_view_vo/books_vo.dart';
 import 'package:library_app/data/vos/over_view_vo/over_view_vo.dart';
 import 'package:library_app/data/vos/search_temp_vo/search_temp_vo.dart';
 import 'package:library_app/data/vos/search_vo/items_vo.dart';
+import 'package:library_app/data/vos/shelve_vo/shelve_vo.dart';
 import 'package:library_app/network/data_agent/the_library_data_agent.dart';
 import 'package:library_app/network/data_agent/the_library_data_agent_impl.dart';
 import 'package:library_app/persistant/abstract/details_dao.dart';
 import 'package:library_app/persistant/abstract/over_view_dao.dart';
 import 'package:library_app/persistant/abstract/search_temp_dao.dart';
+import 'package:library_app/persistant/abstract/shelve_dao.dart';
 import 'package:library_app/persistant/abstract/view_more_dao.dart';
 import 'package:library_app/persistant/impl/details_dao_impl.dart';
 import 'package:library_app/persistant/impl/over_view_dao_impl.dart';
@@ -16,6 +17,7 @@ import 'package:library_app/persistant/impl/view_more_dao_impl.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../persistant/impl/search_temp_dao_impl.dart';
+import '../../persistant/impl/shelve_dao_impl.dart';
 import '../vos/view_more_vo/view_more_hive_vo.dart';
 
 class TheLibraryModelImpl extends TheLibraryModel{
@@ -28,11 +30,13 @@ class TheLibraryModelImpl extends TheLibraryModel{
   ViewMoreDAO _viewMoreDAO=ViewMoreDAOImpl();
   SearchTempDAO _searchTempDAO=SearchTempDAOImpl();
   DetailsDAO _detailsDAO=DetailsDAOImpl();
-  void setDaoAndDataAgent(OverViewDAOImpl overViewDAOImpl,ViewMoreDAOImpl viewMoreDAOImpl,SearchTempDAOImpl searchTempDAOImpl,DetailsDAOImpl detailsDAOImpl,TheLibraryDataAgentImpl theLibraryDataAgentImpl){
+  ShelveDao _shelveDao=ShelveDaoImpl();
+  void setDaoAndDataAgent(OverViewDAOImpl overViewDAOImpl,ViewMoreDAOImpl viewMoreDAOImpl,SearchTempDAOImpl searchTempDAOImpl,DetailsDAOImpl detailsDAOImpl,TheLibraryDataAgentImpl theLibraryDataAgentImpl,ShelveDaoImpl shelveDaoImpl){
     _overViewDAO=overViewDAOImpl;
     _viewMoreDAO=viewMoreDAOImpl;
     _searchTempDAO=searchTempDAOImpl;
     _detailsDAO=detailsDAOImpl;
+    _shelveDao=shelveDaoImpl;
     _theLibraryDataAgentImpl=theLibraryDataAgentImpl;
   }
 
@@ -93,4 +97,33 @@ class TheLibraryModelImpl extends TheLibraryModel{
   @override
   Map<String,String>? getBooksVO(String publishDate, String categoryName) =>_overViewDAO.getBooksObject(publishDate, categoryName);
 
+  @override
+  List<String>? getCategories() =>_detailsDAO.getCategories();
+
+  @override
+  List<DetailsVO>? getDetailsListByCategories(List<String> categories) =>_detailsDAO.getDetailsBookByCategories(categories);
+
+  @override
+  List<ShelveVO>? getShelvesList()=>_shelveDao.getShelvesList();
+
+  @override
+  Stream<List<ShelveVO>?> getShelvesListStream() =>_shelveDao.getShelvesEvent().startWith(_shelveDao.getShelvesListStream()).map((event) => _shelveDao.getShelvesList());
+
+  @override
+  void saveShelves(ShelveVO shelveVO) =>_shelveDao.save(shelveVO);
+
+  @override
+  bool isShelfNameSave(String text) =>_shelveDao.isShelveNameIsSave(text);
+
+  @override
+  ShelveVO? getShelvesVO(String title) =>_shelveDao.getShelvesVOByTitle(title);
+
+  @override
+  void deleteShelf(String title) =>_shelveDao.deleteShelve(title);
+
+  @override
+  List<String> getCategoriesByShelf(String title) =>_shelveDao.getCategories(title);
+
+  @override
+  List<DetailsVO>? getDetailsVOListForShelf(List<String> category) =>_shelveDao.getDetailsListByCategories(category);
 }

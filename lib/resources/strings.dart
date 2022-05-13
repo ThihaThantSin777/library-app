@@ -35,3 +35,7 @@ const presentListText='List';
 const presentGridText='Grid';
 
 const presentLargeGridText='Large grid';
+
+const renameShelfText='Rename shelf';
+
+const deleteShelfText='Delete shelf';

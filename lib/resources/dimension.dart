@@ -42,6 +42,7 @@ const largeGridViewTotalHeight=0.9;
 const girdViewHeight=0.24;
 const largeGirdViewHeight=0.33;
 const listViewHeight=0.23;
+const shelveImageHeight=80.0;
 
 
 

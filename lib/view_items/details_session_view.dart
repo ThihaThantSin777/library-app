@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_app/bloc/details_bloc.dart';
-import 'package:library_app/bloc/home_page_bloc.dart';
 import 'package:library_app/data/vos/search_vo/items_vo.dart';
 import 'package:library_app/resources/dimension.dart';
 import 'package:library_app/widget/book_widget.dart';
@@ -17,7 +17,7 @@ class DetailsImageAndTitleView extends StatelessWidget {
   final String imageURL;
   final String title;
   final String author;
-
+  final imageError='https://i.giphy.com/media/xTiN0IuPQxRqzxodZm/giphy.webp';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,20 +28,19 @@ class DetailsImageAndTitleView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-              borderRadius: BorderRadius.circular(borderRadius10x),
-              child: Image.network(imageURL,
-                width: bookWidth,
-                height: carouselSliderHeight,
-                fit: BoxFit.cover,
-                loadingBuilder: (BuildContext context, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(
-                    ),
-                  );
-                },
-              ),),
+            borderRadius: BorderRadius.circular(borderRadius10x),
+            child: CachedNetworkImage(
+              imageUrl:imageURL,
+              width: bookWidth,
+              height: carouselSliderHeight,
+              fit: BoxFit.cover,
+              placeholder:(context,url)=>const   Center(
+                child: CircularProgressIndicator(
+                ),
+              ),
+              errorWidget: (context,url,error)=>Image.network(imageError),
+            ),
+          ),
           const SizedBox(
             width: padding10x,
           ),
@@ -204,10 +203,12 @@ class DetailsIconBookTypePageCountView extends StatelessWidget {
 }
 
 class DetailsAboutTheBookView extends StatelessWidget {
-  const DetailsAboutTheBookView({Key? key, required this.description,required this.title})
+  const DetailsAboutTheBookView(
+      {Key? key, required this.description, required this.title})
       : super(key: key);
   final String description;
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -218,13 +219,13 @@ class DetailsAboutTheBookView extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:  [
+            children: [
               Text(
                 title,
                 style: const TextStyle(
                     fontSize: fontSize17x, fontWeight: FontWeight.w600),
               ),
-             const Icon(Icons.chevron_right, color: Colors.blue)
+              const Icon(Icons.chevron_right, color: Colors.blue)
             ],
           ),
           const SizedBox(
@@ -322,11 +323,11 @@ class RatingAndCommentView extends StatelessWidget {
           const SizedBox(
             height: padding10x,
           ),
-         const CommentView(),
+          const CommentView(),
           const SizedBox(
             height: padding10x,
           ),
-       const   CommentView(),
+          const CommentView(),
         ],
       ),
     );
@@ -355,10 +356,9 @@ class CommentView extends StatelessWidget {
           children: [
             const Text(
               'Steve',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500, fontSize: fontSize17x),
+              style:
+                  TextStyle(fontWeight: FontWeight.w500, fontSize: fontSize17x),
             ),
-
             const Text(
               '★★★★★ Jul 16, 2020',
               style: TextStyle(
@@ -370,8 +370,7 @@ class CommentView extends StatelessWidget {
               height: padding10x,
             ),
             ConstrainedBox(
-              constraints:
-                  const BoxConstraints(maxWidth: 350, maxHeight: 300),
+              constraints: const BoxConstraints(maxWidth: 350, maxHeight: 300),
               child: const Text(
                 'You should only submit an answer when you are proposing a solution to the poster\'s problem. If you want the poster to clarify the question or provide more information, please leave a comment instead, requesting additional details. When answering, please include specifics, such as step-by-step instructions, context for the solution, and links to useful resources. Also, please make sure that you answer complies with our Rules of Engagement',
                 style: TextStyle(
@@ -429,36 +428,50 @@ class ProgressBarView extends StatelessWidget {
 }
 
 class SimilarBookView extends StatelessWidget {
-  const SimilarBookView({Key? key,required this.onPressed}) : super(key: key);
-  final Function(ItemsVO)onPressed;
+  const SimilarBookView({Key? key, required this.onPressed}) : super(key: key);
+  final Function(ItemsVO) onPressed;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height*0.3,
-      child:  Selector<DetailsBloc,List<ItemsVO>?>(
-        selector: (_,bloc)=>bloc.getSimilarBook,
-        builder: (_,similarBooks,child)=>
-        similarBooks==null ? const Center(child: CircularProgressIndicator(),): HorizontalListViewAndTitleWidget(
-    itemCount: similarBooks.length ,
-    itemBuilder: (_, index) => GestureDetector(
-    onTap: () {
-    onPressed(similarBooks[index]);
-    },
-    child: BookWidget(
-    imageHeight: imageHeight,
-    width: bookWidth,
-    bookURL:similarBooks[index].volumeInfo?.imageLinks?.thumbnail.toString()??'',
-    bookName: similarBooks[index].volumeInfo?.title?.toString()??'',
-    ),
-    ),
-    hasViewMore: false,
-    onPressed: (text) {
-
-    },
-    categoryName:'Similar Books',
-    ),
-      )
-    );
+        height: MediaQuery.of(context).size.height * 0.3,
+        child: Selector<DetailsBloc, List<ItemsVO>?>(
+          selector: (_, bloc) => bloc.getSimilarBook,
+          builder: (_, similarBooks, child) => similarBooks == null
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : HorizontalListViewAndTitleWidget(
+                  onTap: (text)=>debugPrint('None'),
+                  keyText: '',
+                  key: UniqueKey(),
+                  itemCount: similarBooks.length,
+                  itemBuilder: (_, index) => GestureDetector(
+                    onTap: () {
+                      onPressed(similarBooks[index]);
+                    },
+                    child: BookWidget(
+                      onPressed: (){
+                        print(similarBooks[index]);
+                      },
+                      imageHeight: imageHeight,
+                      width: bookWidth,
+                      bookURL: similarBooks[index]
+                              .volumeInfo
+                              ?.imageLinks
+                              ?.thumbnail
+                              .toString() ??
+                          '',
+                      bookName:
+                          similarBooks[index].volumeInfo?.title?.toString() ??
+                              '',
+                    ),
+                  ),
+                  hasViewMore: false,
+                  onPressed: (text) {},
+                  categoryName: 'Similar Books',
+                ),
+        ));
   }
 }
 
@@ -474,22 +487,44 @@ class ReviewAndPolicyView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Rate this book',style: TextStyle(fontSize: fontSize17x,fontWeight: FontWeight.w700),),
+          const Text(
+            'Rate this book',
+            style:
+                TextStyle(fontSize: fontSize17x, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(
             height: padding10x,
           ),
-         const  Text('Tell everyone what you think',style: TextStyle(fontSize: fontSize15x,color: Colors.black54),),
+          const Text(
+            'Tell everyone what you think',
+            style: TextStyle(fontSize: fontSize15x, color: Colors.black54),
+          ),
           const SizedBox(
             height: padding10x,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const [
-              Text('☆',style: TextStyle(fontSize: fontSize35x),),
-              Text('☆',style: TextStyle(fontSize: fontSize35x),),
-              Text('☆',style: TextStyle(fontSize: fontSize35x),),
-              Text('☆',style: TextStyle(fontSize: fontSize35x),),
-              Text('☆',style: TextStyle(fontSize: fontSize35x),),
+              Text(
+                '☆',
+                style: TextStyle(fontSize: fontSize35x),
+              ),
+              Text(
+                '☆',
+                style: TextStyle(fontSize: fontSize35x),
+              ),
+              Text(
+                '☆',
+                style: TextStyle(fontSize: fontSize35x),
+              ),
+              Text(
+                '☆',
+                style: TextStyle(fontSize: fontSize35x),
+              ),
+              Text(
+                '☆',
+                style: TextStyle(fontSize: fontSize35x),
+              ),
             ],
           ),
           const SizedBox(
@@ -500,10 +535,11 @@ class ReviewAndPolicyView extends StatelessWidget {
               width: 100,
               height: 30,
               decoration: BoxDecoration(
-                border: Border.all(color:Colors.black54),
-                borderRadius: BorderRadius.circular(borderRadius5x)
+                  border: Border.all(color: Colors.black54),
+                  borderRadius: BorderRadius.circular(borderRadius5x)),
+              child: const Center(
+                child: Text('Write a review'),
               ),
-              child: const Center(child: Text('Write a review'),),
             ),
           )
         ],
@@ -511,5 +547,3 @@ class ReviewAndPolicyView extends StatelessWidget {
     );
   }
 }
-
-

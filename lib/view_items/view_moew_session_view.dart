@@ -8,11 +8,13 @@ class ViewMoreGridView extends StatelessWidget {
     Key? key,
     required this.viewMoreList,
     required this.scrollController,
-    required this.onTap
+    required this.onTap,
+    required this.onPressed
   }) : super(key: key);
   final List<ViewMoreVO>viewMoreList;
   final ScrollController scrollController;
   final Function(ViewMoreVO)onTap;
+  final Function(ViewMoreVO) onPressed;
   final imageURL='https://i.giphy.com/media/xTiN0IuPQxRqzxodZm/giphy.webp';
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,10 @@ class ViewMoreGridView extends StatelessWidget {
                           padding: const EdgeInsets.only(right: padding20x),
                           child: IconButton(
                             onPressed: (){
-
+                              ViewMoreVO viewMoreVO=ViewMoreVO.normal();
+                              String image=viewMoreList[index].imageURL??imageURL;
+                              viewMoreVO.imageURL=image;
+                onPressed(viewMoreVO);
                             },
                             icon: const Icon(Icons.more_horiz,color: Colors.white),
                           ),

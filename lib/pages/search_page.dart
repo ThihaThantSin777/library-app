@@ -13,27 +13,29 @@ import 'package:library_app/view_items/search_session_view.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
+  SearchPage({required this.scaffoldKey});
   final _debouncer = Debouncer(milliseconds: 500);
+  final GlobalKey<ScaffoldState> scaffoldKey;
 void navigateBack(context){
   Navigator.of(context).pop();
 }
 void navigateToSearchResult(context,String title){
-  SearchTempBloc searchTempBloc=Provider.of(context,listen:false);
-  searchTempBloc.setCategory=[];
-  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SearchResultPage(title: title)));
+  // SearchTempBloc searchTempBloc=Provider.of(context,listen:false);
+  // //searchTempBloc.setCategory=[];
+  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SearchResultPage(title: title,scaffoldKey: scaffoldKey,)));
 }
 void navigateToSearchResultUsingHistory(context,String title){
   if(title!=trendingText && title!=newReleasedText && title!=bookShopText){
     SearchTempBloc searchTempBloc=Provider.of(context,listen:false);
-    searchTempBloc.setCategory=[];
+    //searchTempBloc.setCategory=[];
     searchTempBloc.saveRecentSearch(title,false);
     navigateToSearchResult(context,title);
-  }
+    }
 }
 
-  void navigateToDetailsView(String category, BooksVO booksVO, context) {
+  void navigateToDetailsView(BooksVO booksVO, context) {
     SearchTempBloc searchTempBloc=Provider.of(context,listen: false);
-    searchTempBloc.saveBookVOObjectInDetailsDatabase(booksVO,category);
+    searchTempBloc.saveBookVOObjectInDetailsDatabase(booksVO);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider<DetailsBloc>(
             create:(context)=> DetailsBloc(booksVO.title.toString()),
@@ -50,15 +52,18 @@ void navigateToSearchResultUsingHistory(context,String title){
         elevation: 1,
         centerTitle: false,
         leading: IconButton(
+          key: const Key('Back Search Page'),
           onPressed: ()=>navigateBack(context),
           icon: const Icon(Icons.chevron_left,color: Colors.black,),
         ),
         backgroundColor: Colors.white,
         actions: [
           IconButton(onPressed: (){
+
           }, icon: const Icon(Icons.keyboard_voice,color: Colors.black,))
         ],
         title:  TextField(
+          key: const Key('Search TextField Key'),
           onSubmitted: (string){
             SearchTempBloc searchTempBloc=Provider.of(context,listen:false);
             searchTempBloc.saveRecentSearch(string,true);
@@ -127,7 +132,7 @@ void navigateToSearchResultUsingHistory(context,String title){
                     itemCount: searchResult?.lists?[0].books?.length,
                     itemBuilder: (_,index)=>SearchResultView(
                       onTap: (bookVO){
-                        navigateToDetailsView(searchResult?.lists?[0].listName.toString()??'',bookVO,context);
+                        navigateToDetailsView(bookVO,context);
                       }, booksVO: searchResult?.lists?[0].books?[index]??BooksVO.normal()
                     )
                   )

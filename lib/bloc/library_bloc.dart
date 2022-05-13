@@ -33,39 +33,49 @@ class LibraryBloc extends ChangeNotifier{
     }
     _theLibraryModel.getDetailsFromDataBase().listen((event) {
       _detailsVO=event;
+      _chips=[];
+      List<String>?temp=_theLibraryModel.getCategories();
+      if(temp?.isNotEmpty??false){
+        temp?.forEach((element) {
+          ChipVO chipVO=ChipVO(element, false, false);
+          _chips.add(chipVO);
+        });
+      }
       notifyListeners();
     },
       onError: (error)=>print(error)
     );
 
-    ChipVO chipVO1=ChipVO('Ebook',false,false);
-    ChipVO chipVO2=ChipVO('Audio Book',false,false);
-    ChipVO chipVO3=ChipVO('History',false,false);
-    ChipVO chipVO4=ChipVO('Romance',false,false);
-    ChipVO chipVO5=ChipVO('Computer',false,false);
-    ChipVO chipVO6=ChipVO('Cook',false,false);
-    ChipVO chipVO7=ChipVO('Health',false,false);
 
-    _chips.add(chipVO1);
-    _chips.add(chipVO2);
-    _chips.add(chipVO3);
-    _chips.add(chipVO4);
-    _chips.add(chipVO5);
-    _chips.add(chipVO6);
-    _chips.add(chipVO7);
+
 
   }
 
   void clickChip(String name){
+
    List<ChipVO>temp= _chips.map((value){
       value.isOneSelect=true;
       if(value.chipName==name){
-        value.isSelect=true;
-      }else{
-        value.isSelect=false;
+        value.isSelect=!value.isSelect;
       }
       return value;
     }).toList();
+
+   List<ChipVO>isClose=temp.where((element) => !element.isSelect).toList();
+   if(isClose.length==temp.length){
+     close();
+   }else{
+     List<String>categories=temp.where((element) => element.isSelect).map((e) => e.chipName.toString()).toList();
+     List<DetailsVO>?details=_theLibraryModel.getDetailsListByCategories(categories);
+     setDetailsVO=_sorting(getPresentForm, details??[]);
+   }
+   temp.sort((a,b){
+
+     if(b.isSelect) {
+       return 1;
+     }
+     return -1;
+   });
    _chips=temp;
    notifyListeners();
   }
@@ -76,6 +86,14 @@ void close(){
     return value;
   }).toList();
   _chips=temp;
+  temp.sort((a,b){
+
+    if(b.isSelect) {
+      return 1;
+    }
+    return -1;
+  });
+  setDetailsVO=_sorting(getPresentForm, _theLibraryModel.getDetailsList()??[]);
   notifyListeners();
 }
   void presentText(String text){
@@ -83,18 +101,18 @@ void close(){
     notifyListeners();
   }
 
-  void sortText(String text){
-    setSortText=text;
-    List<DetailsVO>?temp=getDetailsVO;
+  List<DetailsVO>_sorting(String text,List<DetailsVO>temp){
+    List<DetailsVO>result=[];
+
     if(text==sortByTitleText){
-      temp?.sort((a,b){
+      temp.sort((a,b){
         String title1=a.title??'';
         String title2=b.title??'';
         return title1.toLowerCase().compareTo(title2.toLowerCase());
       });
     }
     if(text==sortByAuthorText){
-      temp?.sort((a,b){
+      temp.sort((a,b){
         String title1=a.author??'';
         String title2=b.author??'';
         return title1.compareTo(title2);
@@ -102,19 +120,23 @@ void close(){
     }
 
     if(text==sortByRecentText){
-      temp?.sort((a,b){
-       DateTime title1=DateTime.parse(a.timeStamp??'');
-       DateTime title2=DateTime.parse(b.timeStamp??'');
-       return title1.isBefore(title2)?1:-1;
+      temp.sort((a,b){
+        DateTime title1=DateTime.parse(a.timeStamp??'');
+        DateTime title2=DateTime.parse(b.timeStamp??'');
+        return title1.isBefore(title2)?1:-1;
       });
     }
-    List<DetailsVO>result=[];
-    temp?.forEach((element) {
+    temp.forEach((element) {
       result.add(element);
     });
+    return result;
+  }
 
+  void sortText(String text){
+    setSortText=text;
+    List<DetailsVO>?temp=getDetailsVO;
+    List<DetailsVO>result= _sorting(text, temp??[]);
     setDetailsVO=result;
-
     notifyListeners();
   }
 

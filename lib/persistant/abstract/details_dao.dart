@@ -10,4 +10,10 @@ abstract class DetailsDAO{
   Stream<List<DetailsVO>?>getDetailsBookStream();
 
   DetailsVO ? getDetailsBookByTitle(String title);
+
+  List<String>?getCategories();
+
+  List<DetailsVO>?getDetailsBookByCategories(List<String>categories);
+
+
 }

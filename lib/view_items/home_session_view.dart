@@ -18,6 +18,7 @@ class ListTileTextFieldView extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius10x),
           side: const BorderSide(color: Colors.black38)),
       child:  ListTile(
+        key: const Key('Fake TextField key'),
         onTap: ()=>onTapTextField(),
         leading: const Icon(Icons.search),
         title: const Text(searchPlayBookText),
@@ -34,10 +35,12 @@ class CarouselSliderView extends StatelessWidget {
   const CarouselSliderView({
     Key? key,
     required this.detailsVO,
-    required this.onTap
+    required this.onTap,
+    required this.onPressed
   }) : super(key: key);
   final List<DetailsVO>detailsVO;
   final Function(DetailsVO)onTap;
+  final Function(DetailsVO) onPressed;
   final imageURL='https://i.giphy.com/media/xTiN0IuPQxRqzxodZm/giphy.webp';
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,7 @@ class CarouselSliderView extends StatelessWidget {
           enableInfiniteScroll: false,
           height: carouselSliderHeight,
           viewportFraction: carouselSliderViewPointFrictionSize,
-          autoPlay: true,
+          autoPlay: false,
           enlargeCenterPage: true,
           scrollDirection: Axis.horizontal,
         ),
@@ -94,7 +97,7 @@ class CarouselSliderView extends StatelessWidget {
                         padding: const EdgeInsets.only(right: padding10x),
                         child: IconButton(
                           onPressed: (){
-
+                              onPressed(detailsVO[index]);
                           },
                           icon: const Icon(Icons.more_horiz,color: Colors.white),
                         ),
@@ -111,22 +114,31 @@ class CarouselSliderView extends StatelessWidget {
 }
 
 class TitleAndRightIconView extends StatelessWidget {
-  TitleAndRightIconView({required this.categoryName,required this.onPressed,required this.hasViewMore});
+  TitleAndRightIconView({required this.onTap,required this.keyText,required this.key, required this.categoryName,required this.onPressed,required this.hasViewMore}) : super(key: key);
   final Function(String) onPressed;
   final String categoryName;
   final bool hasViewMore;
+  final Key key;
+  final String keyText;
+  final Function(String) onTap;
+  final Set<String> temp={};
 
   @override
   Widget build(BuildContext context) {
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          categoryName,
-          style: const TextStyle(
-              fontSize: fontSize17x, fontWeight: FontWeight.w500),
+        GestureDetector(
+          onTap: ()=>onTap(categoryName),
+          child: Text(
+            categoryName,
+            style: const TextStyle(
+                fontSize: fontSize17x, fontWeight: FontWeight.w500),
+          ),
         ),
         hasViewMore?IconButton(
+          key: key,
             onPressed: () {
               onPressed(categoryName);
             },

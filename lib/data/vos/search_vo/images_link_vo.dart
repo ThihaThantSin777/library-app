@@ -15,7 +15,7 @@ class ImageLinksVO{
 
   ImageLinksVO(this.smallThumbnail, this.thumbnail);
 
-
+  ImageLinksVO.normal();
   factory ImageLinksVO.fromJson(Map<String,dynamic>json)=>_$ImageLinksVOFromJson(json);
 
   Map<String,dynamic>toJson()=>_$ImageLinksVOToJson(this);
