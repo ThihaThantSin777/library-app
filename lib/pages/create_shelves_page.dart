@@ -19,11 +19,18 @@ import 'package:library_app/widget/library_widget.dart';
 import 'package:library_app/widget/menu_widget.dart';
 import 'package:provider/provider.dart';
 
-class CreateShelvesPage extends StatelessWidget {
+class CreateShelvesPage extends StatefulWidget {
   CreateShelvesPage();
 
+  @override
+  State<CreateShelvesPage> createState() => _CreateShelvesPageState();
+}
+
+class _CreateShelvesPageState extends State<CreateShelvesPage> {
   final TextEditingController _controller = TextEditingController();
+
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final _focusNode = FocusNode();
 
   void saveShelves(context, GlobalKey<FormState> formKey, ShelveVO shelveVO) {
     if (formKey.currentState?.validate() ?? false) {
@@ -80,7 +87,9 @@ class CreateShelvesPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextButton(
+                    key: const Key('Delete Key'),
                     style: ButtonStyle(
+
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                             side: const BorderSide(color: Colors.transparent),
                             borderRadius:
@@ -103,7 +112,18 @@ class CreateShelvesPage extends StatelessWidget {
       },
     );
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+  }
+@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Selector<ShelveBloc, ShelveVO?>(
@@ -179,6 +199,7 @@ class CreateShelvesPage extends StatelessWidget {
                                   ? TextFieldDataTextView(
                                       shelveVO: shelveVO ?? ShelveVO.normal())
                                   : CreateShelveTextFormFieldView(
+                                focusNode: _focusNode,
                                       controller: _controller,
                                     ),
                             ),
@@ -206,6 +227,7 @@ class CreateShelvesPage extends StatelessWidget {
               imageType: 'E book');
         });
   }
+
   void navigateToDetailsView(DetailsVO detailsVO, context) {
     HomePageBloc homePageBloc = Provider.of(context, listen: false);
     homePageBloc.reSaveDetailsObject(detailsVO);

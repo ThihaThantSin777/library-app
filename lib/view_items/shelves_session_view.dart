@@ -24,13 +24,14 @@ class ShelvesListView extends StatelessWidget {
 }
 
 class CreateShelveTextFormFieldView extends StatelessWidget {
-  const CreateShelveTextFormFieldView({Key? key, required this.controller})
+  const CreateShelveTextFormFieldView({Key? key, required this.controller,required this.focusNode})
       : super(key: key);
   final TextEditingController controller;
-
+  final FocusNode focusNode;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       key: const Key('Save TextField Key'),
       validator: (text) {
         if (text?.isEmpty ?? true) {

@@ -20,6 +20,7 @@ import 'package:library_app/view_items/home_session_view.dart';
 import 'details_page_user_flow/details_page_test.dart';
 import 'home_page_user_flow/home_page_test.dart';
 import 'library_page_user_flow/library_page_test.dart';
+import 'shelve_page_user_flow/shelve_page_test.dart';
 
 
 void main()async{
@@ -138,5 +139,8 @@ void main()async{
 
     ///Add to shelf page for two tome
     await addToShelfPageForTwoTime(tester);
+
+    ///Shelf Page
+    await shelfPageForRenameAndDelete(tester);
   });
 }
