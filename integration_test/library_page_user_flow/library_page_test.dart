@@ -17,10 +17,10 @@ Future<void>libraryPageTestForOneTime(WidgetTester tester)async{
 
 
   ///Chip
-  await _scroll(tester, 50, chipScrollKey);
+  await _scroll(tester, -50, chipScrollKey);
   await tester.tap(find.text(chipName));
   await tester.pumpAndSettle(const Duration(seconds: 3));
-  await _scroll(tester, -50, chipScrollKey);
+  await _scroll(tester, 50, chipScrollKey);
   await tester.tap(find.byIcon(Icons.close));
   await tester.pumpAndSettle(const Duration(seconds: 3));
 

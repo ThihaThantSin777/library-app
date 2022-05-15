@@ -42,18 +42,21 @@ class ViewMoreGridView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.network(
-                            viewMoreList[index].imageURL??imageURL,
-                            height: carouselSliderHeight,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                ),
-                              );
-                            },
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(borderRadius10x),
+                            child: Image.network(
+                              viewMoreList[index].imageURL??imageURL,
+                              height: carouselSliderHeight,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context, Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(
                             height: padding10x,

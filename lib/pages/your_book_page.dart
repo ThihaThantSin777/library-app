@@ -119,12 +119,11 @@ class YourBookPage extends StatelessWidget {
             builder: (_, chips, child) => Row(
               children: [
                 Visibility(
-                    visible: chips[0].isOneSelect,
+                    visible: chips.first.isOneSelect,
                     child: Container(
                       margin: const EdgeInsets.only(
                           left: padding10x, right: padding10x, top: padding10x),
                       child: TextButton(
-
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
@@ -150,11 +149,10 @@ class YourBookPage extends StatelessWidget {
                         libraryBloc.clickChip(data.chipName);
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: padding5x,vertical: padding5x),
+                        padding: const EdgeInsets.symmetric(horizontal: padding10x,vertical: padding10x),
                         alignment: Alignment.center,
                         margin: const EdgeInsets.only(
                             left: padding10x,
-                            right: padding10x,
                             top: padding10x),
                         height: chipHeight,
                         decoration: BoxDecoration(

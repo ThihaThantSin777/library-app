@@ -31,7 +31,7 @@ class TheLibraryModelImpl extends TheLibraryModel{
   SearchTempDAO _searchTempDAO=SearchTempDAOImpl();
   DetailsDAO _detailsDAO=DetailsDAOImpl();
   ShelveDao _shelveDao=ShelveDaoImpl();
-  void setDaoAndDataAgent(OverViewDAOImpl overViewDAOImpl,ViewMoreDAOImpl viewMoreDAOImpl,SearchTempDAOImpl searchTempDAOImpl,DetailsDAOImpl detailsDAOImpl,TheLibraryDataAgentImpl theLibraryDataAgentImpl,ShelveDaoImpl shelveDaoImpl){
+  void setDaoAndDataAgent(OverViewDAO overViewDAOImpl,ViewMoreDAO viewMoreDAOImpl,SearchTempDAO searchTempDAOImpl,DetailsDAO detailsDAOImpl,TheLibraryDataAgent theLibraryDataAgentImpl,ShelveDao shelveDaoImpl){
     _overViewDAO=overViewDAOImpl;
     _viewMoreDAO=viewMoreDAOImpl;
     _searchTempDAO=searchTempDAOImpl;
@@ -51,7 +51,8 @@ class TheLibraryModelImpl extends TheLibraryModel{
   @override
   Stream<OverViewVO?> getOverViewBooksFromDataBase(String publishDate, String apiKey) {
    getOverViewBooksFromNetWork(publishDate, apiKey);
-   return _overViewDAO.getOverViewVOStreamEvent().startWith(_overViewDAO.getOverViewVOStream(publishDate)).map((event) => _overViewDAO.getOverViewVO(publishDate));
+  return _overViewDAO.getOverViewVOStreamEvent().startWith(_overViewDAO.getOverViewVOStream(publishDate)).map((event) => _overViewDAO.getOverViewVO(publishDate));
+
   }
 
   @override

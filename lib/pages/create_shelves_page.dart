@@ -28,7 +28,6 @@ class CreateShelvesPage extends StatefulWidget {
 
 class _CreateShelvesPageState extends State<CreateShelvesPage> {
   final TextEditingController _controller = TextEditingController();
-
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final _focusNode = FocusNode();
 
@@ -208,7 +207,7 @@ class _CreateShelvesPageState extends State<CreateShelvesPage> {
                     body: Selector<LibraryBloc, String>(
                         selector: (_, bloc) => bloc.getPresentForm,
                         builder: (_, presentText, child) => showBodyView(
-                            shelveVO ?? ShelveVO.normal(), context)),
+                            shelveVO ?? ShelveVO.normal(), context,shelveVO?.shelveName?.toString()??'')),
                   ));
         });
   }
@@ -275,7 +274,7 @@ class _CreateShelvesPageState extends State<CreateShelvesPage> {
     );
   }
 
-  Widget showBodyView(ShelveVO shelveVO, context) {
+  Widget showBodyView(ShelveVO shelveVO, context,String title) {
     if (shelveVO.detailsVO?.isEmpty ?? true) {
       return const EmptyWidget(
         text: "Tap the menu icon on a book, then select 'Add to shelf'",
@@ -304,6 +303,7 @@ class _CreateShelvesPageState extends State<CreateShelvesPage> {
                                 builder: (_, chips, child) =>
                                     ChipShelfSessionView(
                                   chips: chips,
+                                      title: title,
                                 ),
                               ),
                             ),

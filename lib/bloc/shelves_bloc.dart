@@ -49,6 +49,7 @@ class ShelveBloc extends ChangeNotifier{
      setShelveVO=shelveVO??ShelveVO.normal();
      setDetailsVOList=shelveVO?.detailsVO??[];
      _chips=[];
+
      List<String>temp=_theLibraryModel.getCategoriesByShelf(title);
      if(temp.isNotEmpty){
        temp.forEach((element) {
@@ -107,7 +108,7 @@ class ShelveBloc extends ChangeNotifier{
       onError: (error)=>print(error)
     );
   }
-  void clickChip(String name){
+  void clickChip(String name,String title){
 
     List<ChipVO>temp= _chips.map((value){
       value.isOneSelect=true;
@@ -119,7 +120,7 @@ class ShelveBloc extends ChangeNotifier{
 
     List<ChipVO>isClose=temp.where((element) => !element.isSelect).toList();
     if(isClose.length==temp.length){
-      close();
+      close(title);
     }else{
       List<String>categories=temp.where((element) => element.isSelect).map((e) => e.chipName.toString()).toList();
       List<DetailsVO>?details=_theLibraryModel.getDetailsVOListForShelf(categories);
@@ -135,20 +136,23 @@ class ShelveBloc extends ChangeNotifier{
     _chips=temp;
     notifyListeners();
   }
-  void close(){
+  void close(String title){
     List<ChipVO>temp= _chips.map((value){
       value.isOneSelect=false;
       value.isSelect=false;
       return value;
     }).toList();
-    temp.sort((a,b){
-
-      if(b.isSelect) {
-        return 1;
-      }
-      return -1;
-    });
+    // temp.sort((a,b){
+    //
+    //   if(b.isSelect) {
+    //     return 1;
+    //   }
+    //   return -1;
+    // });
     _chips=temp;
+    ShelveVO? shelveVO= _theLibraryModel.getShelvesVO(title);
+    setShelveVO=shelveVO??ShelveVO.normal();
+    setDetailsVOList=shelveVO?.detailsVO??[];
     setDetailsVOList=  _theLibraryModel.getDetailsList()??[];
     notifyListeners();
   }

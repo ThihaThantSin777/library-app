@@ -20,6 +20,7 @@ import 'package:library_app/view_items/home_session_view.dart';
 import 'details_page_user_flow/details_page_test.dart';
 import 'home_page_user_flow/home_page_test.dart';
 import 'library_page_user_flow/library_page_test.dart';
+import 'search_page_user_flow/search_page_test.dart';
 import 'shelve_page_user_flow/shelve_page_test.dart';
 
 
@@ -109,23 +110,23 @@ void main()async{
     ///CarouselSliderView
     expect(find.byType(CarouselSliderView), findsOneWidget);
 
-    //
-    // ///SearchPage
-    // await searchPage(tester);
-    //
-    //
-    // ///Search Result Page Book1
-    // await searchResultPageBook1(tester);
-    // await searchPageDetails(tester);
-    //
-    // ///Search Result Page Book2
-    // await searchResultPageBook2(tester);
-    // await searchPageDetails(tester);
-    //
-    // await backPageFromSearchPage(tester);
-    //
-    // ///ViewMorePage
-    // await viewMorePageForCategory1(tester);
+
+    ///SearchPage
+    await searchPage(tester);
+
+
+    ///Search Result Page Book1
+    await searchResultPageBook1(tester);
+    await searchPageDetails(tester);
+
+    ///Search Result Page Book2
+    await searchResultPageBook2(tester);
+    await searchPageDetails(tester);
+
+    await backPageFromSearchPage(tester);
+
+    ///ViewMorePage
+    await viewMorePageForCategory1(tester);
 
 
     ///LibraryPage For one time

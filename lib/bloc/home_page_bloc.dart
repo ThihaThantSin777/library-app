@@ -48,6 +48,7 @@ class HomePageBloc extends ChangeNotifier{
           : '0${dateTime.day.toString()}';
       String publishDate = '${dateTime.year}-$monthFormat-$dayFormat';
       _theLibraryModel.getOverViewBooksFromDataBase(publishDate, apiKey).listen((value) {
+
         setOverViewVO=value??OverViewVO.normal();
         notifyListeners();
       },

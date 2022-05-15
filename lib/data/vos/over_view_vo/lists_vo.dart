@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:library_app/data/vos/over_view_vo/books_vo.dart';
@@ -76,7 +77,7 @@ class ListsVO{
           listImage == other.listImage &&
           listImageWidth == other.listImageWidth &&
           listImageHeight == other.listImageHeight &&
-          books == other.books;
+          listEquals(books, other.books);
 
   @override
   int get hashCode =>

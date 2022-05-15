@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:library_app/data/vos/over_view_vo/lists_vo.dart';
@@ -60,7 +61,7 @@ OverViewVO.normal();
           publishedDateDescription == other.publishedDateDescription &&
           previousPublishedDate == other.previousPublishedDate &&
           nextPublishedDate == other.nextPublishedDate &&
-          lists == other.lists;
+          listEquals(lists, other.lists);
 
   @override
   int get hashCode =>

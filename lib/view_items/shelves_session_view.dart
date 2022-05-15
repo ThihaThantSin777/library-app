@@ -172,9 +172,9 @@ class DeleteAlertBoxView extends StatelessWidget {
 }
 
 class ChipShelfSessionView extends StatelessWidget {
-  const ChipShelfSessionView({Key? key, required this.chips}) : super(key: key);
+  const ChipShelfSessionView({Key? key, required this.chips,required this.title}) : super(key: key);
   final List<ChipVO> chips;
-
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -191,7 +191,7 @@ class ChipShelfSessionView extends StatelessWidget {
                         side: const BorderSide(color: Colors.black54)))),
                 onPressed: () {
                   ShelveBloc shelveBloc = Provider.of(context, listen: false);
-                  shelveBloc.close();
+                  shelveBloc.close(title);
                 },
                 child: const Icon(Icons.close),
               ),
@@ -202,10 +202,11 @@ class ChipShelfSessionView extends StatelessWidget {
                 (data) => GestureDetector(
               onTap: () {
                 ShelveBloc shelveBloc = Provider.of(context, listen: false);
-                shelveBloc.clickChip(data.chipName);
+                shelveBloc.clickChip(data.chipName,title);
               },
               child: ChipView(
                 chipVO: data,
+                title: title,
               ),
             ),
           )
@@ -217,9 +218,9 @@ class ChipShelfSessionView extends StatelessWidget {
 }
 
 class ChipView extends StatelessWidget {
-  const ChipView({Key? key, required this.chipVO}) : super(key: key);
+  const ChipView({Key? key, required this.chipVO,required this.title}) : super(key: key);
   final ChipVO chipVO;
-
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Container(

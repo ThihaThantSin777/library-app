@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:library_app/data/vos/over_view_vo/buy_links_vo.dart';
@@ -177,7 +178,7 @@ BooksVO.normal();
           title == other.title &&
           updatedDate == other.updatedDate &&
           weeksOnList == other.weeksOnList &&
-          buyLinks == other.buyLinks;
+          listEquals(buyLinks, other.buyLinks);
 
   @override
   int get hashCode =>

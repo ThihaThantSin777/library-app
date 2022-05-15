@@ -86,7 +86,7 @@ class EbookPage extends StatelessWidget {
                     return    GestureDetector(
                       key: Key('${listVO[index].listID.toString()}-${listVO[index].listName.toString()}-${listVO[index].books![index2].title.toString()}'),
                       onTap: () {
-                        print('${listVO[index].listID.toString()}-${listVO[index].listName.toString()}-${listVO[index].books![index2].title.toString()}');
+                       // print('${listVO[index].listID.toString()}-${listVO[index].listName.toString()}-${listVO[index].books![index2].title.toString()}');
                         navigateToDetailsView(listVO[index].listName.toString(), listVO[index].books![index2], context);
                       },
                       child: BookWidget(

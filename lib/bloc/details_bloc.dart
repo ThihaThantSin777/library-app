@@ -15,7 +15,7 @@ class DetailsBloc extends ChangeNotifier {
     _detailsVO = detailsVO;
   }
 
-  get getDetailsVO => _detailsVO;
+  DetailsVO? get getDetailsVO => _detailsVO;
 
   set setSimilarBook(List<ItemsVO> value) {
     _similarBook = value;

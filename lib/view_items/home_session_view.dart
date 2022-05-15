@@ -49,7 +49,7 @@ class CarouselSliderView extends StatelessWidget {
           enableInfiniteScroll: false,
           height: carouselSliderHeight,
           viewportFraction: carouselSliderViewPointFrictionSize,
-          autoPlay: false,
+          autoPlay: true,
           enlargeCenterPage: true,
           scrollDirection: Axis.horizontal,
         ),

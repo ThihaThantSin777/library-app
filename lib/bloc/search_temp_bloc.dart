@@ -15,6 +15,7 @@ import "package:collection/collection.dart";
 class SearchTempBloc extends ChangeNotifier {
   TheLibraryModel _theLibraryModel = TheLibraryModelImpl();
   OverViewVO? _searchResult;
+  List<ItemsVO>?itemsSearch;
   List<SearchTempVO>? _recentSearch;
   bool _isEmpty = true;
   List<CategoryVO>? _categories;
@@ -57,6 +58,7 @@ class SearchTempBloc extends ChangeNotifier {
       _theLibraryModel.saveRecentSearch(key);
     }
     _theLibraryModel.getSearchResultFromNetWork(key).then((value) {
+      itemsSearch=value;
       var newMap = groupBy(value!, (ItemsVO items) {
         return items.volumeInfo?.categories?.first;
       });
@@ -137,9 +139,11 @@ class SearchTempBloc extends ChangeNotifier {
   void searchFromNetwork(String key) {
     if (key.isNotEmpty) {
       _theLibraryModel.getSearchResultFromNetWork(key).then((value) {
+        itemsSearch=value;
         if (value?.isEmpty ?? true) {
           setIsEmpty = true;
         } else {
+
           setSearchResult = _convertSerahcVOFromOverViewVO(value ?? []);
           setIsEmpty = false;
         }
